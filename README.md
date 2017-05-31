@@ -56,6 +56,146 @@ u = x + dx[i]
 v = y + dy[i]
 * với các nước đi như trên thì (u, v) có thể là ô nằm ngoài bàn cờ. Tuy nhiên, như
 đã nói ở trên, ta đã có điều kiện 0 ≤ u, v < n, do vậy luôn đảm bảo ô (u, v) được chọn là hợp lệ.
+## Các bước lấy dữ liệu để hiển thị thuật toán 
+* Từ thuật toán đệ quy quay lui: 
+```javascript
+let canMove = (x, y) => {
+            return x >= 0 && x < size && y >= 0 && y < size && board[x][y] === 0;
+        };
+        let tour = (x, y, step) => {
+
+            if (step === totalSpace) {
+                board[x][y] = step;
+                return true;
+            }
+            board[x][y] = step;
+
+            if (canMove(x - 1, y - 2) && tour(x - 1, y - 2, step + 1)) {
+                return true;
+            }
+
+            if (canMove(x - 2, y - 1) && tour(x - 2, y - 1, step + 1)) {
+                return true;
+            }
+            if (canMove(x - 2, y + 1) && tour(x - 2, y + 1, step + 1)) {
+                return true;
+            }
+
+            if (canMove(x - 1, y + 2) && tour(x - 1, y + 2, step + 1)) {
+                return true;
+            }
+
+            if (canMove(x + 1, y + 2) && tour(x + 1, y + 2, step + 1)) {
+                return true;
+            }
+
+            if (canMove(x + 2, y + 1) && tour(x + 2, y + 1, step + 1)) {
+                return true;
+            }
+
+            if (canMove(x + 2, y - 1) && tour(x + 2, y - 1, step + 1)) {
+                return true;
+            }
+
+            if (canMove(x + 1, y - 2) && tour(x + 1, y - 2, step + 1)) {
+                return true;
+            }
+
+            board[x][y] = 0;
+
+            //return false;
+        };
+
+```
+* Sẽ cho ra 1 ma trận chứa các nước đi như sau:
+```javascript
+31 02 17 24 33 36 
+16 07 32 35 18 25 
+03 30 01 26 23 34 
+08 15 06 21 12 19 
+29 04 13 10 27 22 
+14 09 28 05 20 11 
+```
+* Từ ma trận kết quả trên ta thấy tương ứng với nước đi đầu tiên (01) ở  hàng 2 cột 2 tương ứng với ô (2,2) trên bàn cờ.
+* Do vậy ta có thể chuyển ma trận các nước đi này về dạng 1 mảng object bao gồm các thuộc tính: object = { nuocdi:0, x:0,y:0}
+* Sau đó ta tiến hành sắp xếp mảng này theo thứ tự tăng dần của nước đi
+* Sau khi có mảng các tọa độ của các nước đi ta tiến hành vẽ hành trình của quân mã bằng d3.js với dữ liệu đầu vào là mảng Arr_obj chứa các đối tượng
+* Code để vẽ như sau: 
+```javascript
+ let drawBoard = () => {
+            const boxSize = 80,
+                boardDimension = N,
+                boardSize = boardDimension * boxSize
+            const div = d3.select("#svg-container");
+            const svg = div.append("svg")
+                .attr("width", boardSize + "px")
+                .attr("height", boardSize + "px");
+        <---------------vẽ bàn cờ---------------------->
+            for (let i = 0; i < boardDimension; i++) {
+                for (let j = 0; j < boardDimension; j++) {
+                    // draw each chess field
+                    const box = svg.append("rect")
+                        .attr("x", i * boxSize)
+                        .attr("y", j * boxSize)
+                        .attr("width", boxSize + "px")
+                        .attr("height", boxSize + "px")
+                    if ((i + j) % 2 === 0) {
+                        box.attr("fill", "beige");
+                    } else {
+                        box.attr("fill", "gray");
+                    }
+                }
+            }
+    <-------vẽ quân cờ ở vị trí bắt đầu và số thự các nước đi------->
+
+            for (let i = 0; i < Arr_obj.length; i++) {
+                  const chess = svg.append("text")
+                    .style("font-size", boxSize / 6)
+                    .attr("text-anchor", "middle")
+                    .attr("x", Arr_obj[i]._x * boxSize + boxSize/2)
+                    .attr("y", Arr_obj[i]._y * boxSize + boxSize/2)
+                    .style("text-shadow", "2px 2px 4px #757575")
+                    .classed('team1', true)
+                if ((i === 0)) {
+                    chess.style("font-size", boxSize * 2 / 4)
+                    chess.text(knight.b)
+                    chess.attr("id", "ma")
+
+                }
+                else {
+                    chess.text(i)
+                }
+            }
+<------------------kết thúc vẽ bàn cờ------------------->
+<------------------Vẽ hành trình của quân cờ------------->
+            
+            var bezierLine = d3.svg.line()
+                .x(function (d) {
+                    return d._x * boxSize + boxSize/2;
+                })
+                .y(function (d) {
+                    return d._y * boxSize + boxSize/2;
+                })
+                .interpolate("linear");
+            svg.append('path').attr("d", bezierLine(Arr_obj)).attr("stroke", "black")
+                .attr("stroke-width", 2)
+                .attr("fill", "none")
+                .transition()
+                .duration(function () {
+                    for (let i = 1; i < Arr_obj.length; i++) {
+                        return i * 40000;
+                    }
+                })
+                .attrTween(
+                    "stroke-dasharray",
+                    function () {
+                        var len = this.getTotalLength();
+                        return function (t) {
+                            return (d3.interpolateString("0," + len, len + "," + 10 * len))(t)
+                        };
+                    });
+        }
+```
 
 
 
