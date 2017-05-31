@@ -117,7 +117,7 @@ let canMove = (x, y) => {
 14 09 28 05 20 11 
 ```
 * Từ ma trận kết quả trên ta thấy tương ứng với nước đi đầu tiên (01) ở  hàng 2 cột 2 tương ứng với ô (2,2) trên bàn cờ.
-* Do vậy ta có thể chuyển ma trận các nước đi này về dạng 1 mảng object bao gồm các thuộc tính: object = { nuocdi:0, x:0,y:0}
+* Do vậy ta có thể chuyển ma trận các nước đi này về dạng 1 mảng object bao gồm các thuộc tính: object = { nuocdi, x, y}
 * Sau đó ta tiến hành sắp xếp mảng này theo thứ tự tăng dần của nước đi
 * Sau khi có mảng các tọa độ của các nước đi ta tiến hành vẽ hành trình của quân mã bằng d3.js với dữ liệu đầu vào là mảng Arr_obj chứa các đối tượng
 * Code để vẽ như sau: 
