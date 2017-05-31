@@ -196,7 +196,9 @@ let canMove = (x, y) => {
                     });
         }
 ```
+## Hành trình của quân mã với n=6 tọa độ ban đầu (x,y)=(2,2)
 
+![Cac nuoc di cua quan ma](IMG_2661.JPG)
 
 
 
