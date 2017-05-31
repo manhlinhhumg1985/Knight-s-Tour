@@ -43,7 +43,7 @@ cần biết là quân mã đi qua ô đó tại nước đi thứ mấy. Như v
 cách kiểm tra xem i đã bằng n 2 chưa. Nếu i<n 2 tức là bàn cờ vẫn còn ô trống.
 * Theo luật cờ thông thường, quân mã từ ô (x,y) có thể đi tới 8 ô trên bàn cờ như trong hình vẽ:
 
-       ![Cac nuoc di cua quan ma](capture2.png)
+![Cac nuoc di cua quan ma](capture2.png)
 
 * Ta thấy rằng 8 ô mà quân mã có thể đi tới từ ô (x,y) có thể tính tương đối so với (x,y) là:
 (x+2, y-1); (x+1, y-2); (x-1, y-2); (x-2, y-1); (x-2, y+1); (x-1, y+2); (x+1; y+2); (x+2, y+1)
